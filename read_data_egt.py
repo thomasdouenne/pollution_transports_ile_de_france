@@ -1,17 +1,25 @@
 # -*- coding: utf-8 -*-
 
+
+# Create several database : at the level of menages, personnes, deplacements, or trajets.
+# These may include or not weekends
+
 from __future__ import division
 
 
 import pandas as pd
 
-def load_data_egt():
-    # Données table ménages :
+
+
+def load_data_menages(weekend):
     df_menages_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\menages_semaine.dta')
     df_menages_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\menages_samedi.dta')
     df_menages_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\menages_dimanche.dta')
     
-    df_menages = pd.concat([df_menages_semaine, df_menages_samedi, df_menages_dimanche])
+    if weekend == True:
+        df_menages = pd.concat([df_menages_semaine, df_menages_samedi, df_menages_dimanche])
+    else:
+        df_menages = df_menages_semaine
     assert(len(df_menages) == len(df_menages.drop_duplicates(subset=['nquest'], keep=False)))
     del df_menages_semaine, df_menages_samedi, df_menages_dimanche
     
@@ -111,13 +119,19 @@ def load_data_egt():
     
     df_menages = df_menages[variables_menages]
     del variables_menages
+
+    return df_menages
+
     
-    # Données table personnes :
+def load_data_personnes(weekend):
     df_personnes_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\personnes_semaine.dta')
     df_personnes_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\personnes_samedi.dta')
     df_personnes_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\personnes_dimanche.dta')
     
-    df_personnes = pd.concat([df_personnes_semaine, df_personnes_samedi, df_personnes_dimanche])
+    if weekend == True:
+        df_personnes = pd.concat([df_personnes_semaine, df_personnes_samedi, df_personnes_dimanche])
+    else:
+        df_personnes = df_personnes_semaine
     del df_personnes_semaine, df_personnes_samedi, df_personnes_dimanche
     
     # Selection des variables personnes (on passe de 61 à 49...)
@@ -175,13 +189,19 @@ def load_data_egt():
     
     df_personnes = df_personnes[variables_personnes]
     del variables_personnes
-    
-    # Données table déplacements :
+
+    return df_personnes
+
+
+def load_data_deplacements(weekend):
     df_deplacements_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\deplacements_semaine.dta')
     df_deplacements_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\deplacements_samedi.dta')
     df_deplacements_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\deplacements_dimanche.dta')
     
-    df_deplacements = pd.concat([df_deplacements_semaine, df_deplacements_samedi, df_deplacements_dimanche], sort = False)
+    if weekend == True:
+        df_deplacements = pd.concat([df_deplacements_semaine, df_deplacements_samedi, df_deplacements_dimanche], sort = False)
+    else:
+        df_deplacements = df_deplacements_semaine
     del df_deplacements_semaine, df_deplacements_samedi, df_deplacements_dimanche
     
     # Selection des variables déplacements (on passe de 54 à 44...)
@@ -234,13 +254,19 @@ def load_data_egt():
     
     df_deplacements = df_deplacements[variables_deplacements]
     del variables_deplacements
-    
-    # Données table trajets :
+
+    return df_deplacements
+
+
+def load_data_trajets(weekend):
     df_trajets_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\trajets_semaine.dta')
     df_trajets_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\trajets_samedi.dta')
     df_trajets_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\trajets_dimanche.dta')
     
-    df_trajets = pd.concat([df_trajets_semaine, df_trajets_samedi, df_trajets_dimanche])
+    if weekend == True:
+        df_trajets = pd.concat([df_trajets_semaine, df_trajets_samedi, df_trajets_dimanche])
+    else:
+        df_trajets = df_trajets_semaine
     del df_trajets_semaine, df_trajets_samedi, df_trajets_dimanche
     
     # Selection des variables trajets (on passe de 24 à 20...)
@@ -269,7 +295,17 @@ def load_data_egt():
     
     df_trajets = df_trajets[variables_trajets]
     del variables_trajets
+
+    return df_trajets
+
+
+def load_data_menages_personnes(weekend):
+    # Données table ménages :
+    df_menages = load_data_menages(weekend)
+
     
+    # Données table personnes :
+    df_personnes = load_data_personnes(weekend)
     
     # Données ménages - personnes
     df_menages_personnes = df_personnes.merge(df_menages, on = 'nquest')
@@ -279,6 +315,71 @@ def load_data_egt():
     df_menages_personnes['np'] = df_menages_personnes['np'].astype(str, inplace = True)
     df_menages_personnes['id_personne'] = df_menages_personnes['nquest'] + '_' + df_menages_personnes['np']
     
+    return df_menages_personnes
+
+
+
+def load_data_menages_personnes_deplacements(weekend):
+    # Données table ménages - personnes :
+    df_menages_personnes = load_data_menages_personnes(weekend)
+    
+    # Données table déplacements :
+    df_deplacements = load_data_deplacements(weekend)
+    df_deplacements['np'] = df_deplacements['np'].astype(str, inplace = True)
+    df_deplacements['id_personne'] = df_deplacements['nquest'] + '_' + df_deplacements['np']
+    df_deplacements = df_deplacements.drop(columns=['nquest', 'np', 'nd'])
+
+    df_menages_personnes_deplacements = df_menages_personnes.merge(df_deplacements, on = 'id_personne')
+
+    return df_menages_personnes_deplacements
+
+
+def load_data_menages_personnes_deplacements_paris(weekend):
+    # Données table ménages - personnes :
+    df_menages_personnes = load_data_menages_personnes(weekend)
+    
+    # Données table déplacements :
+    df_deplacements = load_data_deplacements(weekend)
+    
+    # Passe par Paris
+    df_deplacements['traverse_paris'] = 1 * (df_deplacements['trp'] == '1')
+    df_deplacements['traverse_pas_paris'] = 1 * (df_deplacements['trp'] == '2')
+    df_deplacements['part_de_paris'] = 1 * (df_deplacements['orcour'] == '1')
+    df_deplacements['arrive_a_paris'] = 1 * (df_deplacements['destcour'] == '1')
+    df_deplacements['passe_par_paris'] = df_deplacements['part_de_paris'] + df_deplacements['arrive_a_paris'] + df_deplacements['traverse_paris']
+
+    df_deplacements['np'] = df_deplacements['np'].astype(str, inplace = True)
+    df_deplacements['id_personne'] = df_deplacements['nquest'] + '_' + df_deplacements['np']
+    df_deplacements = df_deplacements.drop(columns=['nquest', 'np', 'nd'])
+
+    # Ceux qui disent être passé par Paris
+    df_deplacements_paris = df_deplacements.query('passe_par_paris > 0')
+    # Ceux qui ne disent pas ne pas être passé par Paris
+    df_deplacements_paris_bis = df_deplacements.query('traverse_pas_paris == 0')
+    
+    df_menages_personnes_deplacements_paris = df_menages_personnes.merge(df_deplacements_paris, on = 'id_personne')
+    df_menages_personnes_deplacements_paris_bis = df_menages_personnes.merge(df_deplacements_paris_bis, on = 'id_personne')
+
+    return df_menages_personnes_deplacements_paris, df_menages_personnes_deplacements_paris_bis
+
+
+def load_data_personnes_paris(weekend, selection):
+    df_deplacements_paris = load_data_menages_personnes_deplacements_paris(weekend)[selection]
+    df_personne_paris = df_deplacements_paris.drop_duplicates(subset=['id_personne'], keep='first')
+
+    return df_personne_paris
+
+
+def load_data_egt(weekend):
+    # Données table ménages - personnes :
+    df_menages_personnes = load_data_menages_personnes(weekend)
+
+    # Données table déplacements :
+    df_deplacements = load_data_deplacements(weekend)
+   
+    # Données table trajets :
+    df_trajets = load_data_trajets(weekend)
+       
     # Données déplacements - trajets
     df_trajets['np'] = df_trajets['np'].astype(str, inplace = True)
     df_trajets['nd'] = df_trajets['nd'].astype(str, inplace = True)
