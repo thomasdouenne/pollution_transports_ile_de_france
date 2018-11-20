@@ -28,7 +28,7 @@ def define_option(weekend):
     return data
 
 
-def define_income(data): # Imputation des revenus à partir de la variable discrète
+def define_income(data): # Impute income from the discrete variable
     data['income'] = (
         800 * (data['revenu'] == '1') # On fixe un minimum à 800
         + (800 + 1200)/2 * (data['revenu'] == '2')
@@ -47,35 +47,46 @@ def define_income(data): # Imputation des revenus à partir de la variable discr
     return data
 
 
-def define_housing_rent(data): # Imputation du loyer
+def define_housing_rent(data): # Impute housing rent with suburb/downtown counterfactual
     data['rent_downtown'] = data['loy_hc'] * (data['option_downtown'] == 1)
     # Trouver un moyen d'imputer un loyer aux propriétaires
     
     return data
 
 
-def define_private_transport_cost(data):
+def define_private_transport_cost(data): # Impute private transport cost (vehicle size, distance, insurance, etc.)
+    # Impute a distance
+    # Determine vehicle consumption by trip
+    # Look at fuel prices at the time of the survey
+    
+    # More difficult : impute it for those who live downtown
+    return data
+
+
+def define_public_transport_cost(data): # Impute public transport cost (price of fares)
+    # Look at fare prices depending on zones at the time of the survey
+    # Impute a price per trip / per day
+    
+    # More difficult : impute it for those who live downtown
+    return data
+
+
+def define_private_transport_non_monetary_costs(data): # Impute private transport non-monetary costs depending on time loss
+    # One should use the time of the trip (which one???)
+    # Then, multiply by the VTT
     
     return data
 
 
-def define_public_transport_cost(data):
-    
+def define_public_transport_non_monetary_costs(data): # Impute public transport non-monetary costs depending on time loss and comfort
+    # One should use the time of the trip (which one???)
+    # Then, multiply by the VTT
+    # And add lack of comfort based on whether he took it during peak hours
     return data
 
 
-def define_private_transport_non_monetary_costs(data):
-    
-    return data
+def define_pollution_exposure(data): # Impute pollution levels for the three options
 
-
-def define_public_transport_non_monetary_costs(data):
-    
-    return data
-
-
-def define_pollution_exposure(data):
-    
     return data
 
 
