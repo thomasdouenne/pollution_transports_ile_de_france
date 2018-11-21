@@ -74,14 +74,26 @@ def define_public_transport_cost(data): # Impute public transport cost (price of
 def define_private_transport_non_monetary_costs(data): # Impute private transport non-monetary costs depending on time loss
     # One should use the time of the trip (which one???)
     # Then, multiply by the VTT
-    
+    data['hourly_wage'] = data['income'] / 155 # On suppose 155h travaillées par mois
+    data['vtt'] = data['hourly_wage'] * 0.8 # On suppose la VTT égale à 80% du salaire
+    data['d_v'] = data['vtt'] * (data['duree'] / 60)
+
+    # Il faudrait aussi imputer une durée de déplacements pour ceux vivant en centre ville
+
     return data
 
 
 def define_public_transport_non_monetary_costs(data): # Impute public transport non-monetary costs depending on time loss and comfort
     # One should use the time of the trip (which one???)
     # Then, multiply by the VTT
+    data['hourly_wage'] = data['income'] / 155 # On suppose 155h travaillées par mois
+    data['vtt'] = data['hourly_wage'] * 0.8 # On suppose la VTT égale à 80% du salaire
+    data['d_t'] = data['vtt'] * (data['duree'] / 60)
+
     # And add lack of comfort based on whether he took it during peak hours
+    # This lack of comfort could be sort of a markup on VTT
+
+    # Il faudrait aussi imputer une durée de déplacements pour ceux vivant en centre ville
     return data
 
 

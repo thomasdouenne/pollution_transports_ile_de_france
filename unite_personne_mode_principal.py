@@ -6,33 +6,37 @@
 
 from __future__ import division
 
-from read_data_egt import load_data_menages, load_data_personnes, load_data_deplacements, \
-    load_data_trajets, load_data_menages_personnes, load_data_egt, load_data_personnes_paris
+from read_data_egt_1 import load_data_menages, load_data_personnes, load_data_deplacements, \
+    load_data_trajets
+from build_samples_2 import load_data_menages_personnes_deplacements_paris, load_data_personnes_paris
 
 
-def define_option_unite_personne(weekend):
-    data = load_data_personnes_paris(weekend, selection = 0)
-    data = data.query('age > 18')
-    data['centre_ville'] = 1 * (data['rescour'] == '1')
-    data['utilise_vp'] = 1 * (data['nbdeplvp'] > 0)
-    data['utilise_tc'] = 1 * (data['nbdepltc'] > 0)
-
-    data['option_downton'] = data['centre_ville']
-    data['option_private_trans'] = data['utilise_vp'] - data['utilise_vp'] * data['centre_ville']
-    data['option_public_trans'] = (
-        data['utilise_tc']
-        - data['utilise_tc'] * data['centre_ville']
-        - data['utilise_tc'] * data['utilise_vp']
-        + data['utilise_tc'] * data['centre_ville'] * data['utilise_vp']
-        )
-
-    return data
+df_deplacements_paris = load_data_menages_personnes_deplacements_paris(weekend = False)[0]
+print df_deplacements_paris['motif_combine']
+df_deplacements_paris['domicile_travail'] = 1 * (df_deplacements_paris['motif_combine'] == '1')
+print df_deplacements_paris['domicile_travail'].mean()
+df_deplacements_paris['domicile_etudes'] = 1 * (df_deplacements_paris['motif_combine'] == '2')
+print df_deplacements_paris['domicile_etudes'].mean()
+df_deplacements_paris['secondaire_travail'] = 1 * (df_deplacements_paris['motif_combine'] == '8')
+print df_deplacements_paris['secondaire_travail'].mean()
 
 
-if __name__ == "__main__":
-    data = define_option_unite_personne(weekend = False)
+df_deplacements_paris.motif_combine[df_deplacements_paris.motif_combine == ''] = 10
+df_deplacements_paris['motif_combine'] = df_deplacements_paris['motif_combine'].astype(int)
 
-    print data['option_downton'].mean()
-    print data['option_private_trans'].mean()
-    print data['option_public_trans'].mean()
-    print data['option_downton'].mean() + data['option_private_trans'].mean() + data['option_public_trans'].mean()
+df_deplacements_paris['duree'].mean()
+
+for i in range(1,11):
+    data = df_deplacements_paris.query('motif_combine == {}'.format(i))
+    data.duree = data.duree.fillna(0)
+    print i, data['duree'].mean(), float(len(data)) / len(df_deplacements_paris) * 100
+
+
+
+data = load_data_menages_personnes_deplacements_paris(weekend = False)[0]
+data = data.sort_values('best_trip', ascending=False)
+data_bis = data.drop_duplicates(subset=['id_personne'], keep='first')
+data_bis = data_bis.sort_values('id_personne', ascending = True)
+
+
+bibi = load_data_personnes_paris(weekend = False, selection = 0)
