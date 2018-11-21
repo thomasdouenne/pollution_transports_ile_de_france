@@ -12,9 +12,16 @@ import pandas as pd
 
 
 def load_data_menages(weekend):
-    df_menages_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\menages_semaine.dta')
-    df_menages_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\menages_samedi.dta')
-    df_menages_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\menages_dimanche.dta')
+    try:
+        df_menages_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\menages_semaine.dta')
+        df_menages_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\menages_samedi.dta')
+        df_menages_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\menages_dimanche.dta')
+
+    except:
+        df_menages_semaine = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\menages_semaine.dta')
+        df_menages_samedi = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\menages_samedi.dta')
+        df_menages_dimanche = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\menages_dimanche.dta')
+
     
     if weekend == True:
         df_menages = pd.concat([df_menages_semaine, df_menages_samedi, df_menages_dimanche])
@@ -124,10 +131,15 @@ def load_data_menages(weekend):
 
     
 def load_data_personnes(weekend):
-    df_personnes_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\personnes_semaine.dta')
-    df_personnes_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\personnes_samedi.dta')
-    df_personnes_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\personnes_dimanche.dta')
-    
+    try:
+        df_personnes_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\personnes_semaine.dta')
+        df_personnes_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\personnes_samedi.dta')
+        df_personnes_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\personnes_dimanche.dta')
+    except:
+        df_personnes_semaine = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\personnes_semaine.dta')
+        df_personnes_samedi = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\personnes_samedi.dta')
+        df_personnes_dimanche = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\personnes_dimanche.dta')
+        
     if weekend == True:
         df_personnes = pd.concat([df_personnes_semaine, df_personnes_samedi, df_personnes_dimanche])
     else:
@@ -194,10 +206,15 @@ def load_data_personnes(weekend):
 
 
 def load_data_deplacements(weekend):
-    df_deplacements_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\deplacements_semaine.dta')
-    df_deplacements_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\deplacements_samedi.dta')
-    df_deplacements_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\deplacements_dimanche.dta')
-    
+    try:
+        df_deplacements_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\deplacements_semaine.dta')
+        df_deplacements_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\deplacements_samedi.dta')
+        df_deplacements_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\deplacements_dimanche.dta')
+    except:
+        df_deplacements_semaine = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\deplacements_semaine.dta')
+        df_deplacements_samedi = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\deplacements_samedi.dta')
+        df_deplacements_dimanche = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\deplacements_dimanche.dta')
+
     if weekend == True:
         df_deplacements = pd.concat([df_deplacements_semaine, df_deplacements_samedi, df_deplacements_dimanche], sort = False)
     else:
@@ -259,9 +276,14 @@ def load_data_deplacements(weekend):
 
 
 def load_data_trajets(weekend):
-    df_trajets_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\trajets_semaine.dta')
-    df_trajets_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\trajets_samedi.dta')
-    df_trajets_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\trajets_dimanche.dta')
+    try:
+        df_trajets_semaine = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\trajets_semaine.dta')
+        df_trajets_samedi = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\trajets_samedi.dta')
+        df_trajets_dimanche = pd.read_stata(r'C:\Users\t.douenne\Documents\Data\data_egt\egt_2010\Stata\trajets_dimanche.dta')
+    except:
+        df_trajets_semaine = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\trajets_semaine.dta')
+        df_trajets_samedi = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\trajets_samedi.dta')
+        df_trajets_dimanche = pd.read_stata(r'C:\Users\thoma\Documents\Data\data_egt\egt_2010\Stata\trajets_dimanche.dta')
     
     if weekend == True:
         df_trajets = pd.concat([df_trajets_semaine, df_trajets_samedi, df_trajets_dimanche])
@@ -300,4 +322,5 @@ def load_data_trajets(weekend):
 
 
 if __name__ == "__main__":
-    data = load_data_menages()
+    weekend = False
+    data = load_data_menages(weekend)
