@@ -68,7 +68,7 @@ def select_best_trip(data): # On note les déplacements d'après le motif puis d
     return data
 
 
-def load_data_personnes_paris_domicile_travail(weekend, selection):
+def load_data_personnes_paris_best_trip(weekend, selection):
     df_deplacements_paris = load_data_menages_personnes_deplacements_paris(weekend)[selection]
     df_personne_paris = select_best_trip(df_deplacements_paris)
 
@@ -78,4 +78,4 @@ def load_data_personnes_paris_domicile_travail(weekend, selection):
 if __name__ == "__main__":
     weekend = False
     selection = 0
-    data = load_data_personnes_paris_domicile_travail(weekend, selection)
+    data = load_data_personnes_paris_best_trip(weekend, selection)

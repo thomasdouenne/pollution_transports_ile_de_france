@@ -40,3 +40,22 @@ data_bis = data_bis.sort_values('id_personne', ascending = True)
 
 
 bibi = load_data_personnes_paris(weekend = False, selection = 0)
+
+
+print data['essence'].mean()
+print data['diesel'].mean()
+
+data['essence'] = 1 * ((data['energv1'] == '1') + (data['energv1'] == '2'))
+data['diesel'] = 1 * (data['energv1'] == '3')
+
+
+data['fiscal_power'] = (
+    0 * (data['puissv1'] == '0')
+    )
+
+data.puissv1[data.puissv1 == ''] = 0
+data['puissv1'] = data['puissv1'].astype(int)
+
+print data['fiscal_power']
+print data['puissv1'].median()
+
