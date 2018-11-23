@@ -93,3 +93,13 @@ print "Distribution per quantile of public trip non-monetary costs"
 quantiles = [.05, .1, .2, .3, .4, .5, .6, .7, .8, .9, .95]
 for i in quantiles:
     print i, data_public['d_t'].quantile(i)
+
+
+# Descriptive statics housing rents : average rent for a 66m² accomodation (average size downtown)
+# Note that this should be taken per individual to be closer to what we actually want to get
+print (data_downtown.query('loy_hc > 0')['loy_hc']).mean() / (data_downtown.query('surf > 0')['surf']).mean() * 66
+print (data_private.query('loy_hc > 0')['loy_hc']).mean() / (data_private.query('surf > 0')['surf']).mean() * 66
+print (data_public.query('loy_hc > 0')['loy_hc']).mean() / (data_public.query('surf > 0')['surf']).mean() * 66
+# Interestingly, m² prices are the same for both categories in the suburb, but significantly higher downtown.
+# people taking PV have simply larger accomodations, but same price per m².
+# Need to update excess price on this basis

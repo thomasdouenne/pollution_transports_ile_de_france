@@ -6,6 +6,8 @@
 
 from __future__ import division
 
+import random
+
 from build_samples_2 import load_data_personnes_paris_best_trip
 
 
@@ -27,8 +29,29 @@ def define_option(weekend, selection):
 
     return data
 
+def define_income_random_uniform(data): # Impute income : take random number in income intervals
+    # Ideally, we would like to know the exact conditional distribution
+    data['income_hh'] = (
+        800 * (data['revenu'] == '1') # On fixe un minimum à 800
+        + random.uniform(800, 1200) * (data['revenu'] == '2')
+        + random.uniform(1200, 1600) * (data['revenu'] == '3')
+        + random.uniform(1600, 2000) * (data['revenu'] == '4')
+        + random.uniform(2000, 2400) * (data['revenu'] == '5')
+        + random.uniform(2400, 3000) * (data['revenu'] == '6')
+        + random.uniform(3000, 3500) * (data['revenu'] == '7')
+        + random.uniform(3500, 4500) * (data['revenu'] == '8')
+        + random.uniform(4500, 5500) * (data['revenu'] == '9')
+        + random.uniform(5500, 10000) * (data['revenu'] == '10') # On fixe un maximum à 10,000
+        + random.uniform(1200, 2000) * (data['revenu'] == '11') # On impute pour ceux qui refusent de répondre
+        + random.uniform(1200, 2000) * (data['revenu'] == '12') # On impute pour ceux qui ne savent pas
+        )
+    
+    data['income'] = data['income_hh'] # On pourrait diviser le revenu du ménage par le nombre d'actifs ou de majeurs ou par uc
+    
+    return data
 
-def define_income(data): # Impute income from the discrete variable
+
+def define_income(data): # Impute income from the discrete variable: take the average of each bin
     data['income_hh'] = (
         800 * (data['revenu'] == '1') # On fixe un minimum à 800
         + (800 + 1200)/2 * (data['revenu'] == '2')
@@ -49,11 +72,11 @@ def define_income(data): # Impute income from the discrete variable
     return data
 
 
-def define_housing_rent(data): # Impute housing rent with suburb/downtown counterfactual
+def define_housing_rent(data): # Impute housing excess rent downtown. The imputation is homogenous and perfectly arbitrary
     #data['rent_downtown'] = data['loy_hc'] * (data['option_downtown'] == 1)
     data['excess_rent_downtown'] = 200 # On suppose le loyer 200€ plus cher en centre-ville, identique pour tous
-    # Ceci est un prix par mois
-    
+    # Monthly rent
+
     return data
 
 
@@ -75,11 +98,11 @@ def define_private_transport_cost(data): # Impute private transport cost (vehicl
     data['fuel_cost'] = (
         data['option_private_trans'] * (data['dportee'] * data['fuel_consumption_100_km'] * data['fuel_cost_per_liter'])
         ) + (1 - data['option_private_trans']) * 2.44 # We impute average fuel cost of VP users for those who do not take their VP
-    
+
     # Add other sources of costs such as car maintenance or insurance
-    
+
     data['p_v'] = data['fuel_cost'] * 10 * 4.5
-    
+
     return data
 
 
@@ -175,7 +198,7 @@ def select_variables_final_dataset(weekend, selection):
         ['option_downtown'] + ['option_private_trans'] + ['option_public_trans']
         + ['income'] + ['excess_rent_downtown'] + ['p_v'] + ['p_t']
         + ['d_d'] + ['d_v'] + ['d_t'] + ['pollution_exposure'] + ['mnp']
-        + ['duree'] + ['dportee']
+        + ['duree'] + ['dportee'] + ['loy_hc'] + ['surf']
         ]
     # On ajoute 'mnp', le nombre de personnes du ménage comme variable de contrôle pour l'aménité résidentielle
     
