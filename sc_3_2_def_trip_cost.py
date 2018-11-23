@@ -6,7 +6,6 @@
 
 from __future__ import division
 
-import random
 
 from sc_2_1_select_sub_samples import load_data_personnes_paris_best_trip
 from sc_2_2_def_agents_option import define_option
@@ -96,16 +95,28 @@ def define_share_public_transport_card_paid(data):
     return data
 
 
-def define_tc_cost(data):
+def define_p_v(data):
+    data = define_option(data)
+    data = define_fuel_cost(data)
+    data = define_insurance_cost_vehicle_random_uniform(data)
+    data = define_maintenance_cost_vehicle_random_uniform(data)
+
+    data['p_v'] = data['fuel_cost'] + data['maintenance_cost'] + data['insurance_cost']
+    
+    return data
+
+
+def define_p_t(data):
+    data = define_share_public_transport_card_paid(data)
+    data['p_t'] = 600/12 * data['share_tc_card_paid']
+
     return data
 
 
 def add_trip_costs_variables(data):
     data = define_option(data)
-    data = define_fuel_cost(data)
-    data = define_insurance_cost_vehicle_random_uniform(data)
-    data = define_maintenance_cost_vehicle_random_uniform(data)
-    data = define_tc_cost(data)
+    data = define_p_v(data)
+    data = define_p_t(data)
 
     return data
 
@@ -115,18 +126,3 @@ if __name__ == "__main__":
     selection = 0
     data = load_data_personnes_paris_best_trip(weekend, selection)
     data = add_trip_costs_variables(data)
-
-    print data['fuel_cost'].mean()
-    print data['maintenance_cost'].mean()
-    print data['insurance_cost'].mean()
-
-
-
-
-
-
-
-
-
-
-

@@ -2,10 +2,10 @@
 
 
 # To do :
-    # Partir du sc_4_1 et faire en sorte qu'il marche
-
     # Améliorer l'efficience du code, ne pas répéter en permanence la définition de l'option
     # Virer les variables qu'on n'utilise plus au fur et à mesure (celles utilisées pour la construction)
+
+    # Faire en sorte qu'aucune variable ne soit dupliquée dans le sample final
 
     # Passer tous les noms de variables en anglais
     

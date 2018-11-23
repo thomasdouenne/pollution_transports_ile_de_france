@@ -12,7 +12,7 @@ from sc_2_2_def_agents_option import define_option
 from sc_3_1_def_income import define_income
 
 
-def define_downtown_transport_non_monetary_costs(data): # Impute non-monetary costs of taking transports when living downtown
+def define_d_d(data): # Impute non-monetary costs of taking transports when living downtown
     data['hourly_wage'] = data['income'] / 155 # On suppose 155h travaillées par mois
     data['vtt'] = data['hourly_wage'] * 0.3 # On suppose la VTT égale à 30% du salaire < à la VTT pour les trajets en VP
     data['d_d'] = data['vtt'] * (36 / 60) # On normalise à 36 min les temps de trajet sur la base du temps moyen pour les downtown
@@ -24,7 +24,7 @@ def define_downtown_transport_non_monetary_costs(data): # Impute non-monetary co
     return data
 
 
-def define_private_transport_non_monetary_costs(data): # Impute private transport non-monetary costs depending on time loss
+def define_d_v(data): # Impute private transport non-monetary costs depending on time loss
     # One should use the time of the trip (which one???)
     # Then, multiply by the VTT
     data['hourly_wage'] = data['income'] / 155 # On suppose 155h travaillées par mois
@@ -42,7 +42,7 @@ def define_private_transport_non_monetary_costs(data): # Impute private transpor
     return data
 
 
-def define_public_transport_non_monetary_costs(data): # Impute public transport non-monetary costs depending on time loss and comfort
+def define_d_t(data): # Impute public transport non-monetary costs depending on time loss and comfort
     # One should use the time of the trip (which one???)
     # Then, multiply by the VTT
     data['hourly_wage'] = data['income'] / 155 # On suppose 155h travaillées par mois
@@ -62,6 +62,11 @@ def define_public_transport_non_monetary_costs(data): # Impute public transport 
 
 
 def add_trip_non_mon_costs_variables(data):
+    data = define_option(data)
+    data = define_d_d(data)
+    data = define_d_v(data)
+    data = define_d_t(data)
+
     return data
 
 
@@ -69,6 +74,4 @@ if __name__ == "__main__":
     weekend = False
     selection = 0
     data = load_data_personnes_paris_best_trip(weekend, selection)
-    data = define_option(data)
-    data = define_income(data)
     data = add_trip_non_mon_costs_variables(data)
