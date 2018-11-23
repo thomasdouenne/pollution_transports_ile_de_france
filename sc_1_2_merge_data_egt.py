@@ -10,7 +10,7 @@ from __future__ import division
 import pandas as pd
 
 
-from read_data_egt_1_1 import load_data_menages, load_data_personnes, load_data_deplacements, \
+from sc_1_1_read_data_egt import load_data_menages, load_data_personnes, load_data_deplacements, \
     load_data_trajets
 
 
@@ -145,4 +145,5 @@ def load_data_egt(weekend):
 
 
 if __name__ == "__main__":
-    data = load_data_egt()
+    weekend = False
+    data = load_data_egt(weekend)

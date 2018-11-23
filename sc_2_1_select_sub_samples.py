@@ -10,9 +10,9 @@ from __future__ import division
 import pandas as pd
 
 
-from read_data_egt_1_1 import load_data_menages, load_data_personnes, load_data_deplacements, \
+from sc_1_1_read_data_egt import load_data_menages, load_data_personnes, load_data_deplacements, \
     load_data_trajets
-from build_data_egt_1_2 import load_data_menages_personnes
+from sc_1_2_merge_data_egt import load_data_menages_personnes
 
 
 def load_data_menages_personnes_deplacements_paris(weekend):

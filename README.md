@@ -2,6 +2,13 @@
 
 
 # To do :
+    # Partir du sc_4_1 et faire en sorte qu'il marche
+
+    # Améliorer l'efficience du code, ne pas répéter en permanence la définition de l'option
+    # Virer les variables qu'on n'utilise plus au fur et à mesure (celles utilisées pour la construction)
+
+    # Passer tous les noms de variables en anglais
+    
     # Faire des progrès sur le calcul de la conso des véhicules
     
     # Tester des mécanismes alternatifs pour le calcul de la distance : utiliser la variable "ddomtrav"
@@ -16,13 +23,16 @@
     
     # Commencer à réflechir à la manière d'imputer la pollution
     
-    # Réorganiser les scripts de manière plus claire
-    # Aussi, mieux commenter chaque script au début en disant clairement ce que je fais
+    # Mieux commenter chaque script au début en disant clairement ce que je fais
 
     # Trouver un moyen de virer les fichiers .pyc
 
+    # Modifier les allocations aléatoires qui ne se font actuellement pas à l'échelle des agents
+    # (mais un unique tirage pour tous). Une possibilité est d'allouer un nombre aléatoire entre 0 et 1
+    # à chaque agent, et ensuite utiliser ce même nombre pour le tirage de toutes les variables.
+    
 
-# Organisation of the scripts:
+# Organization of the scripts:
     # _1 are the scripts used to load the datasets
     # Since these data come from separate tables, _1_2 merges separate datasets from _1_1 to match together
     # households variables from personal ones.
