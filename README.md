@@ -9,6 +9,10 @@
 
     # Passer tous les noms de variables en anglais
     
+    # Mieux commenter chaque script au début en disant clairement ce que je fais
+
+    # Eliminer les Nan
+
     # Faire des progrès sur le calcul de la conso des véhicules
     
     # Tester des mécanismes alternatifs pour le calcul de la distance : utiliser la variable "ddomtrav"
@@ -16,20 +20,15 @@
     
     # Commencer à prendre en compte la question de la congestion via horaires de départ
     
-    # Regarder comment estimer un RUM et tester via données actuelles
+    # Regarder comment estimer un RUM et tester via données actuelles. Exemple :
+    # https://github.com/timothyb0912/pylogit/blob/master/examples/notebooks/Main%20PyLogit%20Example.ipynb
     
     # Faire des progrès sur l'imputation des coûts des transports en commun d'après la zone géographique
     # Utiliser aussi le pourcentage de l'abonnement à charge
     
     # Commencer à réflechir à la manière d'imputer la pollution
     
-    # Mieux commenter chaque script au début en disant clairement ce que je fais
-
-    # Trouver un moyen de virer les fichiers .pyc
-
-    # Modifier les allocations aléatoires qui ne se font actuellement pas à l'échelle des agents
-    # (mais un unique tirage pour tous). Une possibilité est d'allouer un nombre aléatoire entre 0 et 1
-    # à chaque agent, et ensuite utiliser ce même nombre pour le tirage de toutes les variables.
+    # Regarder si les données de l'ERFS permettent d'avoir une meilleure distribution des revenus en IDF
     
 
 # Organization of the scripts:
@@ -45,9 +44,10 @@
     
     # _3 are used to compute variables at the household or individual level, such as prices for trips
     # income, non-monetary costs from trips, etc.
-    # _3_1 defines various variables related to the monetary cost of trips
-    # _3_2 defines various variables related to the non-monetary cost of trips
-    # _3_3 defines variables other than the ones related to trips
+    # _3_1 defines income using several approach (random draw, average)
+    # _3_2 defines various variables related to the monetary cost of trips
+    # _3_3 defines various variables related to the non-monetary cost of trips
+    # _3_4 defines variables other than the ones related to trips
     
     # _4 are used to put all the previous things together and build the final database for estimation
     # _4_1 builds the database and _4_2 runs some descriptive statistics
