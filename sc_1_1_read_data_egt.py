@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# Create several database : at the level of menages, personnes, deplacements, or trajets.
+# Read EGT data : at the level of menages, personnes, deplacements, or trajets.
 # These may include or not weekends
 
 from __future__ import division

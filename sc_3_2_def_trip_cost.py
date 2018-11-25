@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# On étudie séparément toutes les personnes en supposant qu’elles peuvent déménager indépendamment.
-# Le mode de transport retenu est la voiture lorsque les personnes l'utilisent au moins une fois
+# Define the trip monetary cost based on numerous households variables
+# (vehicle type, distance, insurance and maintenance costs, etc.)
 
 
 from __future__ import division
@@ -22,13 +22,14 @@ def define_fuel_cost(data):
     # du prix du carburant selon l'énergie utilisée par le premier véhicule du ménage
     # Att : revoir les prix imputés arbitrairement
 
+    data.dportee = data.dportee.fillna(0)
     data.puissv1[data.puissv1 == ''] = 0
     data['puissv1'] = data['puissv1'].astype(int)
     data['fuel_consumption_100_km'] = (0.06) * (data['puissv1'] < 5) + (0.12) * (1 - 1 * (data['puissv1'] < 5))
     # conso fixée totalement arbitrairement en fonction des chevaux fiscaux, à revoir
     data['fuel_cost'] = (
-        data['option_private_trans'] * (data['dportee'] * data['fuel_consumption_100_km'] * data['fuel_cost_per_liter'])
-        ) + (1 - data['option_private_trans']) * 2.44 # We impute average fuel cost of VP users for those who do not take their VP
+        data['option_vp'] * (data['dportee'] * data['fuel_consumption_100_km'] * data['fuel_cost_per_liter'])
+        ) + (1 - data['option_vp']) * 2.44 # We impute average fuel cost of VP users for those who do not take their VP
 
     # Add other sources of costs such as car maintenance or insurance
 
@@ -128,6 +129,7 @@ if __name__ == "__main__":
     data = load_data_personnes_paris_best_trip(weekend, selection)
     data = add_trip_costs_variables(data)
 
-    print data['maintenance_cost']
-    print data['insurance_cost']
-    print data['p_v']
+    print len(data) - len(data['maintenance_cost'].dropna())
+    print len(data) - len(data['insurance_cost'].dropna())
+    print len(data) - len(data['fuel_cost'].dropna())
+    print len(data) - len(data['p_v'].dropna())

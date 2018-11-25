@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
-# Create several database : at the level of menages, personnes, deplacements, or trajets.
-# These may include or not weekends
+# Create several sub-samples : select individuals / trips according to some characteristics
+# to match the model and the estimation procedure
 
 from __future__ import division
 

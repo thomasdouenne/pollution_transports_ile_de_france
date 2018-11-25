@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# On étudie séparément toutes les personnes en supposant qu’elles peuvent déménager indépendamment.
-# Le mode de transport retenu est la voiture lorsque les personnes l'utilisent au moins une fois
+# Build the final database by putting together all the relevant variables created
+# and selecting the ones that we want to keep
 
 
 from __future__ import division
@@ -26,13 +26,23 @@ def get_variables(weekend, selection):
     return data
 
 
-def select_variables_final_dataset(weekend, selection):
+def compute_total_option_cost(weekend, selection):
     data = get_variables(weekend, selection)
+    data['cost_dt'] = data['q_d'] + data['d_d']
+    data['cost_vp'] = data['p_v'] + data['d_v']
+    data['cost_tc'] = data['p_t'] + data['d_t']
+
+    return data
+
+
+def select_variables_final_dataset(weekend, selection):
+    data = compute_total_option_cost(weekend, selection)
     data = data[
-        ['option_downtown'] + ['option_private_trans'] + ['option_public_trans']
-        + ['income'] + ['excess_rent_downtown'] + ['p_v'] + ['p_t']
-        + ['d_d'] + ['d_v'] + ['d_t'] + ['pollution_exposure'] + ['mnp']
-        + ['duree'] + ['dportee'] + ['loy_hc'] + ['surf']
+        ['option_dt'] + ['option_vp'] + ['option_tc']
+        + ['income'] + ['p_v'] + ['p_t']
+        + ['d_d'] + ['d_v'] + ['d_t'] + ['q_d'] + ['pollution_exposure']
+        + ['mnp'] + ['duree'] + ['dportee'] + ['surf']
+        + ['cost_dt'] + ['cost_vp']+ ['cost_tc']
         ]
     # On ajoute 'mnp', le nombre de personnes du ménage comme variable de contrôle pour l'aménité résidentielle
     
@@ -43,3 +53,4 @@ if __name__ == "__main__":
     weekend = False
     selection = 0
     data = select_variables_final_dataset(weekend, selection)
+    

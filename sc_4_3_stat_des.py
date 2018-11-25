@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 
+# Run some descriptive statictis to better understand our final database
+
 from __future__ import division
 
 
-from build_data_wip_3 import select_variables_final_dataset
+from sc_4_1_build_final_data import select_variables_final_dataset
 
 
 data = select_variables_final_dataset(weekend = False, selection = 0)
 
 
 # Descriptive statics on options :
-data_downtown = data.query('option_downtown == 1')
-data_private = data.query('option_private_trans == 1')
-data_public = data.query('option_public_trans == 1')
+data_downtown = data.query('option_dt == 1')
+data_private = data.query('option_vp == 1')
+data_public = data.query('option_tc == 1')
 
 print "Share for each option :"
 print "downtown", (float(len(data_downtown)) / len(data)) * 100
@@ -97,9 +99,9 @@ for i in quantiles:
 
 # Descriptive statics housing rents : average rent for a 66m² accomodation (average size downtown)
 # Note that this should be taken per individual to be closer to what we actually want to get
-print (data_downtown.query('loy_hc > 0')['loy_hc']).mean() / (data_downtown.query('surf > 0')['surf']).mean() * 66
-print (data_private.query('loy_hc > 0')['loy_hc']).mean() / (data_private.query('surf > 0')['surf']).mean() * 66
-print (data_public.query('loy_hc > 0')['loy_hc']).mean() / (data_public.query('surf > 0')['surf']).mean() * 66
+print data_downtown['q_d'].mean()
+print data_private['q_d'].mean()
+print data_public['q_d'].mean()
 # Interestingly, m² prices are the same for both categories in the suburb, but significantly higher downtown.
 # people taking PV have simply larger accomodations, but same price per m².
 # Need to update excess price on this basis

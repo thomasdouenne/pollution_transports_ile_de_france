@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# On étudie séparément toutes les personnes en supposant qu’elles peuvent déménager indépendamment.
-# Le mode de transport retenu est la voiture lorsque les personnes l'utilisent au moins une fois
+# Define the trip non-monetary costs based on numerous households variables
+# (income, etc.)
 
 
 from __future__ import division
@@ -30,8 +30,8 @@ def define_d_v(data): # Impute private transport non-monetary costs depending on
     data['hourly_wage'] = data['income'] / 155 # On suppose 155h travaillées par mois
     data['vtt'] = data['hourly_wage'] * 0.5 # On suppose la VTT égale à 50% du salaire
     data['vp_trip_duration'] = (
-        data['duree'] * data['option_private_trans']
-        + (1-data['option_private_trans']) * 66
+        data['duree'] * data['option_vp']
+        + (1-data['option_vp']) * 66
         ) # Pour ceux qui ne prennent pas leur VP, on leur impute comme contrefactuel la durée moyenne du groupe VP
     data['d_v'] = data['vtt'] * (data['vp_trip_duration'] / 60)
     del data['hourly_wage'], data['vtt']
@@ -48,8 +48,8 @@ def define_d_t(data): # Impute public transport non-monetary costs depending on 
     data['hourly_wage'] = data['income'] / 155 # On suppose 155h travaillées par mois
     data['vtt'] = data['hourly_wage'] * 0.75 # On suppose la VTT égale à 75% du salaire > aux VP à cause du confort moindre
     data['tc_trip_duration'] = (
-        data['duree'] * data['option_public_trans']
-        + (1 - data['option_public_trans']) * 73.5
+        data['duree'] * data['option_tc']
+        + (1 - data['option_tc']) * 73.5
         ) # Pour ceux qui ne prennent pas les TC, on leur impute comme contrefactuel la durée moyenne du groupe TC
 
     data['d_t'] = data['vtt'] * (data['tc_trip_duration'] / 60)

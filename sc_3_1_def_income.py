@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# On étudie séparément toutes les personnes en supposant qu’elles peuvent déménager indépendamment.
-# Le mode de transport retenu est la voiture lorsque les personnes l'utilisent au moins une fois
+# Define agents income using alternative procedures: impute average of income category
+# or select randomly from this category (using a uniform distribution, see if there are better alternatives)
 
 
 from __future__ import division

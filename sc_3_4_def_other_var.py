@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# On étudie séparément toutes les personnes en supposant qu’elles peuvent déménager indépendamment.
-# Le mode de transport retenu est la voiture lorsque les personnes l'utilisent au moins une fois
-
+# Define other important variables
 
 from __future__ import division
-
-import random
 
 from sc_2_1_select_sub_samples import load_data_personnes_paris_best_trip
 from sc_2_2_def_agents_option import define_option
@@ -14,9 +10,13 @@ from sc_2_2_def_agents_option import define_option
 
 def define_housing_rent(data): # Impute housing excess rent downtown. The imputation is homogenous and perfectly arbitrary
     #data['rent_downtown'] = data['loy_hc'] * (data['option_downtown'] == 1)
-    data['excess_rent_downtown'] = 200 # On suppose le loyer 200€ plus cher en centre-ville, identique pour tous
-    # Monthly rent
+    data.surf = data.surf.fillna(70) #C we arbitrary set housing size to 70m2 when information is not given (18 agents)
+    avg_rent_downtown = (data.query('option_dt == 1').query('loy_hc > 0')['loy_hc']).mean() / (data.query('option_dt == 1').query('surf > 0')['surf']).mean() * 66
+    avg_rent_vp = (data.query('option_vp == 1').query('loy_hc > 0')['loy_hc']).mean() / (data.query('option_vp == 1').query('surf > 0')['surf']).mean() * 66
+    avg_rent_tc = (data.query('option_tc == 1').query('loy_hc > 0')['loy_hc']).mean() / (data.query('option_tc == 1').query('surf > 0')['surf']).mean() * 66
 
+    data['excess_rent_downtown'] = avg_rent_downtown - (avg_rent_vp + avg_rent_tc)/2 # On suppose le loyer 200€ plus cher en centre-ville, identique pour tous
+    data['q_d'] = data['excess_rent_downtown']
     return data
 
 
@@ -26,9 +26,9 @@ def define_pollution_exposure(data): # Impute pollution levels for the three opt
     constant = 0.001 # To be defined !
     data['wtp_pollution'] = constant * data['hourly_wage']
     data['pollution_exposure'] = (
-        0 * data['option_downtown']
-        + 0 * data['option_private_trans']
-        + 0 * data['option_public_trans']
+        0 * data['option_dt']
+        + 0 * data['option_vp']
+        + 0 * data['option_tc']
         ) # On fixe par défaut le niveau de pollution à 0 partout
 
     return data

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
-# Create several database : at the level of menages, personnes, deplacements, or trajets.
-# These may include or not weekends
+# Merge databases to match together households, individuals, trips and sub-trips
 
 from __future__ import division
 
