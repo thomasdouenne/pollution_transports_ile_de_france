@@ -24,11 +24,15 @@
     # Commencer à réflechir à la manière d'imputer la pollution
     
     # Regarder si les données de l'ERFS permettent d'avoir une meilleure distribution des revenus en IDF
+    # Etudier la possibilité d'effectuer un matching ERFS / EGT pour obtenir une meilleure distribution des revenus
 
     # Construire un RUM tel que la seule variable qui joue soit le coût généralisé des logements / transports
     # i.e. la somme de toutes les variables de coût, définie selon chacune des options.
+
+    # Réfléchir aux variables de contrôle que je pourrais vouloir intégrer
     
     # Essayer de comprendre ce que signifie la présence de "duplicates" dans la database finale
+
 
 # Organization of the scripts:
     # _1 are the scripts used to load the datasets
@@ -49,6 +53,6 @@
     # _3_4 defines variables other than the ones related to trips
     
     # _4 are used to put all the previous things together and build the final database for estimation
-    # _4_1 builds the database and _4_2 runs some descriptive statistics
+    # _4_1 builds the database, _4_2 checks it is fine, and _4_3 runs some descriptive statistics
     
-    # _5 are the scripts that estimate the RUM
+    # _5 are the scripts that estimate the different versions of the RUM

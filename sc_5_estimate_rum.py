@@ -6,7 +6,6 @@
 
 from __future__ import division
 
-import numpy as np
 import statsmodels.formula.api as smf
 
 
@@ -17,8 +16,9 @@ data = select_variables_final_dataset(weekend = False, selection = 0)
 
 data_suburb = data.query('option_dt == 0')
 data_suburb['excess_cost_vp'] = data_suburb['cost_vp'] - data_suburb['cost_tc']
+data_suburb['excess_consumption_vp'] = data_suburb['income'] - data_suburb['excess_cost_vp']
 
-variables = ['income', 'excess_cost_vp']
+variables = ['excess_consumption_vp']
 
 logit = smf.Logit(data_suburb['option_vp'], data_suburb[variables]).fit()
 print logit.summary()
@@ -29,4 +29,4 @@ print logit.get_margeff().summary()
 #probit = smf.Probit(data['option_downtown'], data[variables]).fit()
 #print probit.summary()
 
-# Bosser sur un logit imbriqué (banlieue vs cntre ville, puis vp vs tc)
+# Bosser sur un logit imbriqué (banlieue vs centre ville, puis vp vs tc)
