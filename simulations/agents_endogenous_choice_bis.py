@@ -34,12 +34,19 @@ df_sim['vtt_t'] = df_sim['r_'] * 0.6
 df_sim['b_v'] = 0
 df_sim['b_t'] = 0
 
-n_d = 35 # Exogenous number of people downtown
-marginal_agent = len(df_sim) * 0.65
+n_d = 30 # Exogenous number of people downtown
+marginal_agent = len(df_sim) * (1 - (float(n_d)/100))
 
-df_to_plot = pd.DataFrame(index = range(1,11), columns = ['toll', 'subsidy', 'n_v'])
+# Find the equilibrium allocation
+df_to_plot = pd.DataFrame(index = range(0,11),
+    columns = ['toll', 'subsidy', 'n_v_toll', 'n_v_subsidy', 'q_d_toll', 'q_d_subsidy']
+    )
+df_welfare = pd.DataFrame(index = range(0,11),
+    columns = ['toll', 'subsidy', 'share_winners_toll', 'share_winners_subsidy']
+    )
+
 for policy in ['toll', 'subsidy']:
-    for i in range(1,11):
+    for i in range(0,11):
         if policy == 'toll':
             df_sim['toll'] = i * 10
             df_sim['subsidy'] = 0
@@ -74,13 +81,62 @@ for policy in ['toll', 'subsidy']:
             df_sim['option_t'] = 1 * (df_sim['b_t'] > df_sim['b_v']) * (df_sim['b_t'] > df_sim['b_d'])
         
             new_n_v = df_sim['option_v'].mean() * 100
+            q_d = df_sim['q_d'].mean()
         
-        df_to_plot['n_v'][i] = new_n_v
+        df_to_plot['n_v_{}'.format(policy)][i] = new_n_v
+        df_to_plot['q_d_{}'.format(policy)][i] = q_d
         df_to_plot[policy][i] = i * 10
+        
+        if i == 0:
+            df_sim['b_option_default'] = (
+                    df_sim['b_d'] * df_sim['option_d']
+                    + df_sim['b_v'] * df_sim['option_v']
+                    + df_sim['b_t'] * df_sim['option_t']
+                    )
+        else:
+            df_sim['b_option_{}_{}'.format(policy, i)] = 0
+            df_sim['b_option_{}_{}'.format(policy, i)] = (
+                    df_sim['b_d'] * df_sim['option_d']
+                    + df_sim['b_v'] * df_sim['option_v']
+                    + df_sim['b_t'] * df_sim['option_t']
+                    ) - df_sim['b_option_default']
+            df_welfare['share_winners_{}'.format(policy)][i] = (df_sim['b_option_{}_{}'.format(policy, i)] > 0).mean() * 100
+            df_welfare[policy][i] = i * 10
+
     
-# Create graphs
-plt.title("PV users as a function of toll/subsidy price")
-plt.plot(df_to_plot['toll'], df_to_plot['subsidy'], df_to_plot['n_v'])
+# Create graphs - equilibrium N_v
+plt.title("PV users as a function of toll price")
+plt.plot(df_to_plot['toll'], df_to_plot['n_v_toll'])
 plt.xlabel('Policy value in euros per month')
 plt.ylabel('Share of people using Private Vehicules')
 plt.show()
+
+plt.title("PV users as a function of subsidy price")
+plt.plot(df_to_plot['subsidy'], df_to_plot['n_v_subsidy'])
+plt.xlabel('Policy value in euros per month')
+plt.ylabel('Share of people using Private Vehicules')
+plt.show()
+
+# Create graphs - equilibrium Q_d
+plt.plot(df_to_plot['toll'], df_to_plot['q_d_toll'])
+plt.xlabel('Policy value in euros per month')
+plt.ylabel('Excess monthly rent downtown')
+plt.show()
+
+plt.plot(df_to_plot['subsidy'], df_to_plot['q_d_subsidy'])
+plt.xlabel('Policy value in euros per month')
+plt.ylabel('Excess monthly rent downtown')
+plt.show()
+
+
+# Look at welfare impact
+plt.plot(df_welfare['toll'], df_welfare['share_winners_toll'])
+plt.xlabel('Policy value in euros per month')
+plt.ylabel('Share of winners as a function of tolls')
+plt.show()
+
+plt.plot(df_welfare['subsidy'], df_welfare['share_winners_subsidy'])
+plt.xlabel('Policy value in euros per month')
+plt.ylabel('Share of winners as a function of subsidies')
+plt.show()
+

@@ -4,7 +4,7 @@
 # To do :
     # Improve congestion functions
     # Try to better match EGT statistics
-    # Try to improve codes' efficiency
+    # Try to better match distribution of incomes
     # Try to plot effect of policies
 
 
