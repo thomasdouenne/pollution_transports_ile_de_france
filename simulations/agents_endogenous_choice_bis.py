@@ -17,25 +17,34 @@ df_sim = pd.DataFrame(index=range(1,100001), columns=columns)
 df_sim = df_sim.reset_index()
 
 # Agent income
-df_sim['r_'] = 500 + (5000 - 500) * (df_sim['index'] / len(df_sim))
+df_sim['r_'] = 800 + (8000 - 800) * (df_sim['index'] / len(df_sim))
 
 # Transport prices
 # df_sim['distance'] = 5 + (15 - 5) * np.random.rand(len(df_sim))
-df_sim['distance'] = 10
+df_sim['distance'] = 15
 df_sim['p_v'] = 10 * df_sim['distance']
-df_sim['p_t'] = 50
+df_sim['p_t'] = 30
 
-df_sim['duree_v'] = df_sim['distance'] / 60
-df_sim['duree_t'] = df_sim['distance'] / 60
+df_sim['duree_d'] = float(15) / 60 # Duration of a trip in hours
+df_sim['duree_v'] = df_sim['distance'] / 60 * (float(60) / 50) # Assuming these transports have an average speed of 50km/h
+df_sim['duree_t'] = df_sim['distance'] / 60 * (float(60) / 40) # Assuming these transports have an average speed of 40km/h
 
-df_sim['vtt_v'] = df_sim['r_'] * 0.45
-df_sim['vtt_t'] = df_sim['r_'] * 0.6
+df_sim['vtt_d'] = df_sim['r_'] / 150 * 0.5 # Assuming people work 150 per month
+df_sim['vtt_v'] = df_sim['r_'] / 150 * 0.5
+df_sim['vtt_t'] = df_sim['r_'] / 150 * 0.75
+
+df_sim['d_d'] = df_sim['duree_d'] * df_sim['vtt_d'] * 40 # Assuming 40 trips per month
 
 df_sim['b_v'] = 0
 df_sim['b_t'] = 0
 
-n_d = 30 # Exogenous number of people downtown
+n_d = 25 # Exogenous number of people downtown
 marginal_agent = len(df_sim) * (1 - (float(n_d)/100))
+# Congestion parameters :
+a = 0.25
+b = 6
+c = 0.8
+d = 2.5
 
 # Find the equilibrium allocation
 df_to_plot = pd.DataFrame(index = range(0,11),
@@ -61,21 +70,21 @@ for policy in ['toll', 'subsidy']:
             current_n_v = (9 * current_n_v + new_n_v) / 10
             current_n_t = 100 - n_d - current_n_v
             
-            congestion_v = 1 + 5 * ((float(current_n_v)/100)**(2))
-            congestion_t = 1 + 5 * ((float(current_n_t)/100)**(2))
+            congestion_v = (1 + a*float(current_n_v)/100)**b
+            congestion_t = (1 + c*float(current_n_t)/100)**d
             
             df_sim['duree_v'] = df_sim['distance'] / 60 * congestion_v
             df_sim['duree_t'] = df_sim['distance'] / 60 * congestion_t
         
-            df_sim['d_v'] = df_sim['duree_v'] * df_sim['vtt_v']
-            df_sim['d_t'] = df_sim['duree_t'] * df_sim['vtt_t']
-        
-            df_sim['q_d'] = df_sim['p_v'] + df_sim['d_v'][marginal_agent] + df_sim['toll'] - 0.001
+            df_sim['d_v'] = df_sim['duree_v'] * df_sim['vtt_v'] * 40 # Assuming 40 trips per month
+            df_sim['d_t'] = df_sim['duree_t'] * df_sim['vtt_t'] * 40
+
+            df_sim['q_d'] = df_sim['p_v'] + (df_sim['d_v'][marginal_agent] - df_sim['d_d'][marginal_agent]) + df_sim['toll'] - 0.001
             
-            df_sim['b_d'] = df_sim['r_'] - df_sim['q_d']
+            df_sim['b_d'] = df_sim['r_'] - df_sim['q_d'] - df_sim['d_d']
             df_sim['b_v'] = df_sim['r_'] - df_sim['p_v'] - df_sim['d_v'] - df_sim['toll']
             df_sim['b_t'] = df_sim['r_'] - df_sim['p_t'] - df_sim['d_t'] + df_sim['subsidy']
-        
+
             df_sim['option_d'] = 1 * (df_sim['b_d'] > df_sim['b_v']) * (df_sim['b_d'] > df_sim['b_t'])
             df_sim['option_v'] = 1 * (df_sim['b_v'] > df_sim['b_d']) * (df_sim['b_v'] > df_sim['b_t'])
             df_sim['option_t'] = 1 * (df_sim['b_t'] > df_sim['b_v']) * (df_sim['b_t'] > df_sim['b_d'])
@@ -86,7 +95,7 @@ for policy in ['toll', 'subsidy']:
         df_to_plot['n_v_{}'.format(policy)][i] = new_n_v
         df_to_plot['q_d_{}'.format(policy)][i] = q_d
         df_to_plot[policy][i] = i * 10
-        
+        print congestion_v, congestion_t
         if i == 0:
             df_sim['b_option_default'] = (
                     df_sim['b_d'] * df_sim['option_d']
