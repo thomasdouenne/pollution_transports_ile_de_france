@@ -3,9 +3,10 @@
 
 # To do :
     # Do the linear model with analytic solutions
-        # Do nicer 
         # Compute welfare loss as a share of income (with and without recycling, with and without pollution)
         # Try to derive some conclusions
+        # Check whether optimality conditions may hold with A negative
+        # Add results with subsidy + tolls that finances subsidies
     # Improve congestion functions (3)
     # Try to better match EGT statistics (2)
     # Try to better match distribution of incomes (1)
