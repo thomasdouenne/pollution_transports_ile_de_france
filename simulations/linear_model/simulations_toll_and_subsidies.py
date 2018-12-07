@@ -31,7 +31,7 @@ theta = (1.0 / 155) * 40 * (22.0 / 60) * 0.5 # People spend 25min in their car w
 # they do the trip 40 times a month, their vtt is 0.5 their income
 mu = 3.5 # sensitivity of time travel to congestion
 gamma = 3 # sensitivity of time travel to congestion
-epsilon = 0.02
+epsilon = 0.025
 a = -100 # amenity value in euro per month
 p_v = 4.5 * 40 # price of the trip in PV, for a month
 p_t = 1 * 40 # Price of the trip in TC, for a month
