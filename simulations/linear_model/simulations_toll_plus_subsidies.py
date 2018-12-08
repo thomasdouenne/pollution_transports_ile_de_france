@@ -2,9 +2,11 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from matplotlib.ticker import FuncFormatter
 import seaborn
 
-seaborn.set_palette(seaborn.color_palette("Set2", 12))
+seaborn.set_palette(seaborn.color_palette("hls", 12))
 
 """
 In this script, we calibrate the linear model for which we can get analytic solutions
@@ -33,7 +35,7 @@ theta = (1.0 / 155) * 40 * (22.0 / 60) * 0.5 # People spend 25min in their car w
 # they do the trip 40 times a month, their vtt is 0.5 their income
 mu = 3.5 # sensitivity of time travel to congestion
 gamma = 3 # sensitivity of time travel to congestion
-epsilon = 0.03
+epsilon = 0.025
 a = -100 # amenity value in euro per month
 p_v = 4.5 * 40 # price of the trip in PV, for a month
 p_t = 1 * 40 # Price of the trip in TC, for a month
@@ -99,7 +101,7 @@ for toll in [0,10,30,50,100]:
     if toll != 0:
         df_sim['gain_{}'.format(toll)] = (
             (df_sim['b_option_{}'.format(toll)] - df_sim['b_option_0']) / df_sim['b_option_0']  
-            ) * 100
+            )
         df_sim['gain_level_{}'.format(toll)] = (
             (df_sim['b_option_{}'.format(toll)] - df_sim['b_option_0'])
             )
@@ -129,13 +131,20 @@ plt.grid(True)
 plt.show()
 
 # Create graphs - loss from toll as a share of income
-plt.plot(df_sim['r_'], df_sim[['gain_10'] + ['gain_30'] + ['gain_50'] + ['gain_100']])
+df_sim = df_sim.rename(columns = {'gain_10': '1 € toll', 'gain_30': '3 € toll', 'gain_50': '5 € toll', 'gain_100': '10 € toll'})
+axes = df_sim[['1 € toll'] + ['3 € toll'] + ['5 € toll'] + ['10 € toll']].plot()
+axes.yaxis.set_major_formatter(FuncFormatter(lambda y, _: '{:.1%}'.format(y)))
 plt.xlabel('Agents income')
-plt.ylabel('Gains / losses')
+plt.ylabel('Welfare gains relative to no toll')
+axes.legend(
+    bbox_to_anchor = (1, 1),
+        )
 plt.grid(True)
 plt.show()
 
-
 # Plot share of each option - tolls
-df_toll['n_d_toll'] = 35
-df_toll[['n_t_toll', 'n_v_toll', 'n_d_toll']].plot.bar(stacked=True, width=1) 
+df_toll['n_d_toll'] = 100 * n_d
+to_plot = df_toll[['n_t_toll', 'n_v_toll', 'n_d_toll']].plot.bar(stacked=True, width=1) 
+to_plot.legend(
+    bbox_to_anchor = (0.75, 0.928),
+        )

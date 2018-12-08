@@ -2,9 +2,11 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from matplotlib.ticker import FuncFormatter
 import seaborn
 
-seaborn.set_palette(seaborn.color_palette("Set2", 12))
+seaborn.set_palette(seaborn.color_palette("hls", 12))
 
 """
 In this script, we calibrate the linear model for which we can get analytic solutions
@@ -116,7 +118,7 @@ for toll in [0,10,30,50,100]:
     if toll != 0:
         df_sim['gain_{}'.format(toll)] = (
             (df_sim['b_option_{}'.format(toll)] - df_sim['b_option_0']) / df_sim['b_option_0']  
-            ) * 100
+            )
         df_sim['gain_level_{}'.format(toll)] = (
             (df_sim['b_option_{}'.format(toll)] - df_sim['b_option_0'])
             )
@@ -161,17 +163,23 @@ plt.grid(True)
 plt.show()
 
 # Create graphs - loss from toll as a share of income
-plt.plot(df_sim['r_'], df_sim[['gain_10'] + ['gain_30'] + ['gain_50'] + ['gain_100']])
+df_sim = df_sim.rename(columns = {'gain_10': '1 € toll', 'gain_30': '3 € toll', 'gain_50': '5 € toll', 'gain_100': '10 € toll'})
+axes = df_sim[['1 € toll'] + ['3 € toll'] + ['5 € toll'] + ['10 € toll']].plot()
+axes.yaxis.set_major_formatter(FuncFormatter(lambda y, _: '{:.1%}'.format(y)))
 plt.xlabel('Agents income')
-plt.ylabel('Gains / losses')
+plt.ylabel('Welfare gains relative to no toll')
+axes.legend(
+    bbox_to_anchor = (1, 1),
+        )
 plt.grid(True)
 plt.show()
 
-
 # Plot share of each option - tolls
-df_toll['n_d_toll'] = 35
-df_toll[['n_t_toll', 'n_v_toll', 'n_d_toll']].plot.bar(stacked=True, width=1) 
-
-# Plot share of each option - subsidies
-#df_subsidy['n_d_subsidy'] = 35
-#df_subsidy[['n_t_subsidy', 'n_v_subsidy', 'n_d_subsidy']].plot.bar(stacked=True, width=1) 
+df_toll['% Downtown residents'] = n_d
+df_toll['% VP users'] = df_toll['n_v_toll'] / 100
+df_toll['% TC users'] = df_toll['n_t_toll'] / 100
+to_plot = df_toll[['% TC users', '% VP users', '% Downtown residents']].plot.bar(stacked=True, width=1) 
+to_plot.yaxis.set_major_formatter(FuncFormatter(lambda y, _: '{:.1%}'.format(y)))
+to_plot.legend(
+    bbox_to_anchor = (0.5, 0.928)
+        )
